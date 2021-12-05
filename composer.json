@@ -1,0 +1,33 @@
+{
+    "name": "sourecode/form",
+    "type": "library",
+    "description": "Provides extra form classes for the symfony form component",
+    "keywords": ["form"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jason Schilling",
+            "email": "jason@sourecode.dev"
+        }
+    ],
+    "require": {
+        "php": "^8.0 || ^8.1",
+        "symfony/serializer": "^5.3 || ^5.4 || ^6.0 || ^6.1",
+        "symfony/http-foundation": "^5.3 || ^5.4 || ^6.0 || ^6.1",
+        "symfony/form": "^5.3 || ^5.4 || ^6.0 || ^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "SoureCode\\Component\\Form\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    },
+    "minimum-stability": "dev"
+}

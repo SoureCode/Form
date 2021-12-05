@@ -1,0 +1,9 @@
+
+# Dependencies
+vendor/
+
+# Lock
+composer.lock
+
+# Config
+phpunit.xml
