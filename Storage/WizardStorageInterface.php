@@ -24,7 +24,7 @@ interface WizardStorageInterface
 
     public function has(string $wizardName): bool;
 
-    public function loadStep(string $wizardName, string $stepName, mixed $model): void;
+    public function loadStep(string $wizardName, string $stepName, object $model): void;
 
     public function remove(string $wizardName): void;
 

@@ -10,21 +10,26 @@
 
 namespace SoureCode\Component\Form;
 
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
 class WizardStep
 {
-    private mixed $data = null;
+    private ?object $data = null;
 
     private array $options;
 
+    /**
+     * @var class-string<FormTypeInterface> $type
+     */
     private string $type;
 
     /**
-     * @param class-string<FormInterface> $type
+     * @param class-string<FormTypeInterface> $type
      */
     public function __construct(string $type, array $options = [])
     {
@@ -32,12 +37,12 @@ class WizardStep
         $this->options = $options;
     }
 
-    public function getData(): mixed
+    public function getData(): ?object
     {
         return $this->data;
     }
 
-    public function setData(mixed $data): void
+    public function setData(?object $data): void
     {
         $this->data = $data;
     }
@@ -52,11 +57,19 @@ class WizardStep
         $this->options = $options;
     }
 
+    /**
+     * @return class-string<FormTypeInterface>
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * @param class-string<FormTypeInterface> $type
+     *
+     * @return void
+     */
     public function setType(string $type): void
     {
         $this->type = $type;

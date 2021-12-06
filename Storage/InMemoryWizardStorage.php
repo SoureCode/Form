@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class InMemoryWizardStorage implements WizardStorageInterface
 {
-    private $data = [];
+    private array $data = [];
 
     private SerializerInterface $serializer;
 
@@ -68,7 +68,7 @@ class InMemoryWizardStorage implements WizardStorageInterface
         );
     }
 
-    public function loadStep(string $wizardName, string $stepName, mixed $model): void
+    public function loadStep(string $wizardName, string $stepName, object $model): void
     {
         $steps = $this->get($wizardName);
         $step = $steps[$stepName] ?? null;

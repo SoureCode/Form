@@ -10,9 +10,11 @@
 
 namespace SoureCode\Component\Form;
 
+use RuntimeException;
 use SoureCode\Component\Form\Storage\WizardStorageInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -39,6 +41,11 @@ abstract class Wizard
         $this->storage = $storage;
     }
 
+    public function clear(): void
+    {
+        $this->storage->remove(static::class);
+    }
+
     public function getSteps(): array
     {
         return $this->steps;
@@ -46,6 +53,9 @@ abstract class Wizard
 
     public function handleRequest(Request $request): FormInterface
     {
+        /**
+         * @var ?string $queryStep
+         */
         $queryStep = $request->query->get('step', null);
 
         if (null !== $queryStep) {
@@ -54,6 +64,10 @@ abstract class Wizard
             }
 
             $this->currentStep = $queryStep;
+        }
+
+        if (null === $this->currentStep) {
+            throw new RuntimeException('No current step set.');
         }
 
         $form = $this->createForm();
@@ -95,6 +109,10 @@ abstract class Wizard
     {
         if (null === $this->currentStep) {
             $this->currentStep = array_key_first($this->steps);
+        }
+
+        if (null === $this->currentStep) {
+            throw new RuntimeException('No step is defined.');
         }
 
         return $this->currentStep;
@@ -139,7 +157,7 @@ abstract class Wizard
         $this->setStepData($stepName, $model);
     }
 
-    public function setStepData(string $stepName, $data): void
+    public function setStepData(string $stepName, ?object $data): void
     {
         $this->getStep($stepName)->setData($data);
     }
@@ -149,33 +167,38 @@ abstract class Wizard
         $currentStep = $this->getCurrentStep();
         $stepNames = array_keys($this->steps);
         $currentStepIndex = array_search($currentStep, $stepNames, true);
-        $nextStepIndex = $currentStepIndex + 1;
 
-        if (isset($stepNames[$nextStepIndex])) {
-            $this->currentStep = $stepNames[$nextStepIndex];
+        if ($currentStepIndex !== false) {
+            $nextStepIndex = $currentStepIndex + 1;
 
-            return true;
+            if (isset($stepNames[$nextStepIndex])) {
+                $this->currentStep = $stepNames[$nextStepIndex];
+
+                return true;
+            }
         }
 
         return false;
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->currentStep = null;
         $this->request = null;
         $this->steps = [];
     }
 
+    /**
+     * @param string                          $name
+     * @param class-string<FormTypeInterface> $type
+     * @param array                           $options
+     *
+     * @return WizardStep
+     */
     protected function addStep(string $name, string $type, array $options = []): WizardStep
     {
         $this->steps[$name] = new WizardStep($type, $options);
 
         return $this->steps[$name];
-    }
-
-    public function clear()
-    {
-        $this->storage->remove(static::class);
     }
 }
