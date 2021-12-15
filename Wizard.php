@@ -67,6 +67,10 @@ abstract class Wizard
         }
 
         if (null === $this->currentStep) {
+            $this->currentStep = $this->getFirstStep();
+        }
+
+        if (null === $this->currentStep) {
             throw new RuntimeException('No current step set.');
         }
 
@@ -81,6 +85,11 @@ abstract class Wizard
         }
 
         return $form;
+    }
+
+    public function getFirstStep(): ?string
+    {
+        return array_key_first($this->steps);
     }
 
     public function createForm(): FormInterface
@@ -108,7 +117,7 @@ abstract class Wizard
     public function getCurrentStep(): string
     {
         if (null === $this->currentStep) {
-            $this->currentStep = array_key_first($this->steps);
+            $this->currentStep = $this->getFirstStep();
         }
 
         if (null === $this->currentStep) {
@@ -168,7 +177,7 @@ abstract class Wizard
         $stepNames = array_keys($this->steps);
         $currentStepIndex = array_search($currentStep, $stepNames, true);
 
-        if ($currentStepIndex !== false) {
+        if (false !== $currentStepIndex) {
             $nextStepIndex = $currentStepIndex + 1;
 
             if (isset($stepNames[$nextStepIndex])) {
@@ -189,11 +198,7 @@ abstract class Wizard
     }
 
     /**
-     * @param string                          $name
      * @param class-string<FormTypeInterface> $type
-     * @param array                           $options
-     *
-     * @return WizardStep
      */
     protected function addStep(string $name, string $type, array $options = []): WizardStep
     {

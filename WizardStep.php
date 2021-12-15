@@ -10,8 +10,6 @@
 
 namespace SoureCode\Component\Form;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
 
 /**
@@ -24,7 +22,7 @@ class WizardStep
     private array $options;
 
     /**
-     * @var class-string<FormTypeInterface> $type
+     * @var class-string<FormTypeInterface>
      */
     private string $type;
 
@@ -67,8 +65,6 @@ class WizardStep
 
     /**
      * @param class-string<FormTypeInterface> $type
-     *
-     * @return void
      */
     public function setType(string $type): void
     {
